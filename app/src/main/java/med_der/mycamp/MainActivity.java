@@ -2,7 +2,9 @@ package med_der.mycamp;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
@@ -22,12 +24,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 import layout.ChatFragment;
 import layout.NotConnectedFragment;
 import layout.ProfileFragment;
 import layout.ToDoFragment;
 
-public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFragmentInteractionListener , ProfileFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFragmentInteractionListener , ProfileFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, NotConnectedFragment.OnFragmentInteractionListener {
 
     public static User user;
     public GoogleSignInAccount account;
@@ -35,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
     DatabaseReference usersRef;
 
     boolean flag=false;
+    public static boolean internetState=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +90,13 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
         };
         usersRef.addValueEventListener(ComListener);
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                internetState = checkInternetState();
+                handler.postDelayed(this, 7000); //now is every 2 minutes
+            }
+        }, 7000);
 
         BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
                 = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -91,23 +105,30 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                switch (item.getItemId()) {
-                    case R.id.group_chat:
-                        ChatFragment ncf = new ChatFragment();
-                        ncf.accessGroupChat(account.getDisplayName().toUpperCase(),account.getId(),user.getTeam());
-                        fragmentTransaction.replace(R.id.container,ncf).commit();
-                        return true;
-                    case R.id.todo_list:
-                        ToDoFragment ntf = new ToDoFragment();
-                        ntf.setId(account.getId());
-                        fragmentTransaction.replace(R.id.container,ntf).commit();
-                        return true;
-                    case R.id.profile:
-                        ProfileFragment npf = new ProfileFragment();
-                        npf.datasave(user);
-                        fragmentTransaction.replace(R.id.container,npf).commit();
-                        return true;
+                if (internetState)  {
+                    switch (item.getItemId()) {
+                        case R.id.group_chat:
+                            ChatFragment ncf = new ChatFragment();
+                            ncf.accessGroupChat(account.getDisplayName().toUpperCase(),account.getId(),user.getTeam());
+                            fragmentTransaction.replace(R.id.container,ncf).commit();
+                            return true;
+                        case R.id.todo_list:
+                            ToDoFragment ntf = new ToDoFragment();
+                            ntf.setId(account.getId());
+                            fragmentTransaction.replace(R.id.container,ntf).commit();
+                            return true;
+                        case R.id.profile:
+                            ProfileFragment npf = new ProfileFragment();
+                            npf.datasave(user);
+                            fragmentTransaction.replace(R.id.container,npf).commit();
+                            return true;
+                    }
                 }
+                else {
+                    NotConnectedFragment nncf = new NotConnectedFragment();
+                    fragmentTransaction.replace(R.id.container,nncf).commit();
+                }
+
                 return false;
             }
 
@@ -124,5 +145,16 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    boolean checkInternetState(){
+        try (Socket socket = new Socket()) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            socket.connect(new InetSocketAddress("www.google.com" , 80), 2000);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

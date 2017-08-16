@@ -2,6 +2,7 @@ package med_der.mycamp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,10 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 import static android.R.attr.data;
 
 public class AuthenticationActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -27,6 +32,9 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     private ProgressDialog mProgressDialog;
     private static final int RC_SIGN_IN = 9001;
     public GoogleSignInAccount account;
+    boolean online;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,13 +95,32 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     @Override
     public void onClick(View v) {
         if (v.getId()==R.id.sign_in_button){
-            if (mGoogleApiClient.isConnected()) {
-                mGoogleApiClient.clearDefaultAccountAndReconnect();
-                mGoogleApiClient.disconnect();
-                mGoogleApiClient.connect();
+            online = hostAvailable("www.google.com", 80);
+            if (online){
+                if (mGoogleApiClient.isConnected()) {
+                    mGoogleApiClient.clearDefaultAccountAndReconnect();
+                    mGoogleApiClient.disconnect();
+                    mGoogleApiClient.connect();
+                }
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, RC_SIGN_IN);
             }
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, RC_SIGN_IN);
+            else
+                Toast.makeText(getApplicationContext(),"Error occured! Check your internet connexion. ",Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    public boolean hostAvailable(String host, int port) {
+        try (Socket socket = new Socket()) {
+
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+
+            socket.connect(new InetSocketAddress(host, port), 2000);
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 
