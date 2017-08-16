@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "450809191680",
+    "firebase_url": "https://mycamp-f0398.firebaseio.com",
+    "project_id": "mycamp-f0398",
+    "storage_bucket": "mycamp-f0398.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450809191680:android:88c572d8613395f2",
+        "android_client_info": {
+          "package_name": "med_der.mycamp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "450809191680-ov6eaa31fndqa4oa1c8j0u2nom5g2put.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "med_der.mycamp",
+            "certificate_hash": "96b4eb2b363aae83844c5bc695ce945694cbbacf"
+          }
+        },
+        {
+          "client_id": "450809191680-cr0gstu8vqugdu4ou4jddedpgtqind6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1FPUS31cnhwzWqDgeHIqWSorQHZ_pr7A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "450809191680-cr0gstu8vqugdu4ou4jddedpgtqind6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
