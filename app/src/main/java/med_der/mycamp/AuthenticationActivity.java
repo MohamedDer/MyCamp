@@ -100,7 +100,6 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
                 if (mGoogleApiClient.isConnected()) {
                     mGoogleApiClient.clearDefaultAccountAndReconnect();
                     mGoogleApiClient.disconnect();
-                    mGoogleApiClient.connect();
                 }
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
