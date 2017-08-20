@@ -93,7 +93,6 @@ public class ChatFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         final View v = inflater.inflate(R.layout.fragment_chat, container, false);
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("My Camp").child("Chats").child(group);
@@ -139,6 +138,12 @@ public class ChatFragment extends Fragment {
         return  v;
     }
 
+    public void accessGroupChat(String name,final String id,String grp){
+        this.id=  id;
+        this.name = name;
+        this.group=grp;
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -163,25 +168,12 @@ public class ChatFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
-    public void accessGroupChat(String name,final String id,String grp){
-        this.id=  id;
-        this.name = name;
-        this.group=grp;
-    }
+
 
 }

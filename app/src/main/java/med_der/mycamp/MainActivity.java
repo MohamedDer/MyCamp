@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements ToDoFragment.OnFr
         handler.postDelayed(new Runnable() {
             public void run() {
                 internetState = checkInternetState();
-                handler.postDelayed(this, 7000); //now is every 2 minutes
+                handler.postDelayed(this, 7000); //check inernet status every 7 seconds
             }
         }, 7000);
 

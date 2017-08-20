@@ -3,11 +3,9 @@ package med_der.mycamp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Mohamed Derkaoui on 10/08/2017.
- */
 
 public class User implements Parcelable {
+
     private String Id;
     private String DisplayName;
     private String PhotoURL;
@@ -24,6 +22,27 @@ public class User implements Parcelable {
         this.Team=team;
         this.Tel=tel;
     }
+
+    protected User(Parcel in) {
+        Id = in.readString();
+        DisplayName = in.readString();
+        PhotoURL = in.readString();
+        Team = in.readString();
+        Tel = in.readString();
+        Email = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getDisplayName() {
         return DisplayName;
@@ -54,6 +73,11 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(Id);
+        dest.writeString(DisplayName);
+        dest.writeString(PhotoURL);
+        dest.writeString(Team);
+        dest.writeString(Tel);
+        dest.writeString(Email);
     }
 }

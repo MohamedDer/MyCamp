@@ -54,9 +54,6 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
 
     }
 
-
-
-
    @Override
     public void onStart() {
         super.onStart();
@@ -81,7 +78,7 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
         } else {
             // Signed out, show unauthenticated UI.
             Log.d("HamdledSignInResult : ", "Not logged in !");
-            Toast.makeText(this,"Error occured! \n Check your internet connection. ",Toast.LENGTH_LONG);
+            Toast.makeText(this,"Error occured! \n Check your internet connexion. ",Toast.LENGTH_LONG);
         }
     }
 
@@ -112,10 +109,8 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
 
     public boolean hostAvailable(String host, int port) {
         try (Socket socket = new Socket()) {
-
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-
             socket.connect(new InetSocketAddress(host, port), 2000);
             return true;
         } catch (IOException e) {
